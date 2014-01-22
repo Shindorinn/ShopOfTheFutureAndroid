@@ -1,6 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Shop of the Future</string>
+    <!-- General App  -->
+        <string name="app_name">Shop of the Future</string>
     <string name="action_settings">Settings</string>
+    
+    <!-- Titles  -->
+    <string name="title_activity_shopping">Shopping</string>
+    
+    
+    <!-- Buttons  -->
+	<string name="start_shopping">Start Shopping</string>
     <string name="scan_barcode">Scan a barcode</string>
+	<string name="browse_shopping_lists">Browse your shopping lists</string>
+    
+    <!-- Unsorted -->
+    <string name="hello_world">Hello world!</string>
+    
+
 </resources>
