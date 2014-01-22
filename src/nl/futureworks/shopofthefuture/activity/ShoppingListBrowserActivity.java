@@ -10,7 +10,12 @@ import com.futureworks.shopofthefuture.R;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 
 public class ShoppingListBrowserActivity extends Activity {
@@ -58,6 +63,17 @@ public class ShoppingListBrowserActivity extends Activity {
 			public void onRefresh() {
 				new GetShoppingListsTask().execute();
 			}
+		});
+		
+		//Set OnClickListener
+		browserListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				String selectedItem = (String) (browserListView.getItemAtPosition(arg2));
+				Log.d("Browser", selectedItem);
+			}
+			
 		});
 	}
 	
