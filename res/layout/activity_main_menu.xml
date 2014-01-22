@@ -11,22 +11,23 @@
 
     <Button
             style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
+            android:id="@+id/button_mainmenu_startshopping"
+            android:text="@string/start_shopping"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/scan_barcode"
-            android:id="@+id/button" android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
-            android:layout_marginTop="123dp"
-            android:onClick="scanBarcode"/>
-
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:onClick="startShopping"/>
+    
     <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/button"
-        android:layout_alignRight="@+id/button"
-        android:layout_below="@+id/button"
-        android:layout_marginTop="42dp"
-        android:text="@string/saved_shoppinglists"
-        android:onClick="startShoppingListBrowserActivity"/>
-
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/button_mainmenu_browseshoppinglists"
+            android:text="@string/browse_shopping_lists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/button_mainmenu_startshopping"
+            android:onClick="browseShoppingLists"/>
+    
 </RelativeLayout>

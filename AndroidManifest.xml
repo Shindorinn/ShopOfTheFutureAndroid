@@ -23,9 +23,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="nl.futureworks.shopofthefuture.activity.ShoppingListBrowserActivity"
-            android:label="@string/title_activity_shopping_list_browser" >
+            android:name="nl.futureworks.shopofthefuture.activity.ShoppingActivity"
+            android:label="@string/title_activity_shopping" >
         </activity>
+       <activity
+            android:name="nl.futureworks.shopofthefuture.activity.ShoppingListBrowserActivity"
+            android:label="@string/browse_shopping_lists" >
+        </activity>
+        
     </application>
 
 </manifest>
