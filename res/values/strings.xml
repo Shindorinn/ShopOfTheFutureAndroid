@@ -17,10 +17,10 @@
     <string name="title_activity_shopping_list_browser">Saved shopping lists</string>
     
     <!-- PullToRefreshListView -->
-    <string name="pull_to_refresh_pull_label">Pull to refresh...</string>
-    <string name="pull_to_refresh_release_label">Release to refresh...</string>
-    <string name="pull_to_refresh_refreshing_label">Loading...</string>
-    <string name="pull_to_refresh_tap_label">Tap to refresh...</string>
+    <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
+    <string name="pull_to_refresh_release_label">Release to refresh&#8230;</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+    <string name="pull_to_refresh_tap_label">Tap to refresh&#8230;</string>
 
     <!-- Unsorted -->
     <string name="hello_world">Hello world!</string>
