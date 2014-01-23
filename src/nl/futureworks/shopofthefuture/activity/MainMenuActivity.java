@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
 
@@ -18,6 +19,15 @@ public class MainMenuActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		this.initializeActivity();
+		
+		// Check if this is a resume
+		if(savedInstanceState != null){
+			Editor editor = this.preferences.edit();
+			
+			// Re-initialize the sharedPreferences
+			editor.putBoolean(Registry.APP_LOGIN, savedInstanceState.getBoolean(Registry.APP_LOGIN));
+			editor.commit();
+		}
 		
 		// Create SharedPreferences file
 		preferences = this.getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
@@ -37,7 +47,7 @@ public class MainMenuActivity extends Activity {
 			if(resultCode == Registry.LOGIN_ACTIVITY_SUCCESS){
 				
 			}else if(resultCode == Registry.LOGIN_ACTIVITY_FAILED){
-				// TODO: Lock the account
+				// TODO: Lock the account?
 			}else if(resultCode == Registry.RESULT_CANCELED){
 				// TODO: Try logging in..  or?
 			}
