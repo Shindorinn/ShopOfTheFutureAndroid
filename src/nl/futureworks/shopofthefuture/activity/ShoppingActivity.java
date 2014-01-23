@@ -1,5 +1,6 @@
 package nl.futureworks.shopofthefuture.activity;
 
+import android.widget.Toast;
 import com.futureworks.shopofthefuture.R;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -20,8 +21,10 @@ public class ShoppingActivity extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
+        if (scanResult != null && scanResult.getContents() != null) {
             Log.d("DEBUG", scanResult.getContents());
+            Toast toast = Toast.makeText(this, scanResult.getContents(), Toast.LENGTH_LONG);
+            toast.show();
         }
     }
     
