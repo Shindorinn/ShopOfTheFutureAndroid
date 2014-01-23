@@ -46,6 +46,15 @@ public class ShoppingList {
 	}
 	
 	/**
+	 * Override of the toString() method for displaying ShoppingList 
+	 * correctly in the ListView
+	 */
+	@Override
+	public String toString(){
+		return name;
+	}
+	
+	/**
 	 * Getter for id
 	 * @return
 	 */
