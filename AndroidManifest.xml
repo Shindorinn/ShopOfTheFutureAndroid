@@ -28,9 +28,13 @@
         </activity>
        <activity
             android:name="nl.futureworks.shopofthefuture.activity.ShoppingListBrowserActivity"
-            android:label="@string/browse_shopping_lists" >
+            android:label="@string/title_activity_shopping_list_browser" >
         </activity>
-        
+        <activity
+            android:name="nl.futureworks.shopofthefuture.activity.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+
     </application>
 
 </manifest>

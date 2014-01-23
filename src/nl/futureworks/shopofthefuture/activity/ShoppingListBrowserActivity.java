@@ -80,6 +80,7 @@ public class ShoppingListBrowserActivity extends Activity {
 		});
 	}
 	
+	//TODO : Replace with nl.futureworks.shopofthefuture.task
 	private class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<String>> {
 		
 		@Override
