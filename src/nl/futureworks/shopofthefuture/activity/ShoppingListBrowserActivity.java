@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
+import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 
 import com.futureworks.shopofthefuture.R;
 
@@ -28,12 +29,15 @@ public class ShoppingListBrowserActivity extends Activity {
 	
 	//Dummycounter
 	private int mockCounter = 0;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shopping_list_browser);
+		
+		//Database Test
+		DatabaseHandler db = DatabaseHandler.getInstance(this);
+		db.sendQuery("user", null, null, null, null, null, null, null);
 		
 		initializeListView();
 	}
