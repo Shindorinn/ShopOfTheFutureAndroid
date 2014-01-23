@@ -29,5 +29,15 @@
             android:layout_centerHorizontal="true"
             android:layout_below="@id/button_mainmenu_startshopping"
             android:onClick="browseShoppingLists"/>
-    
+
+    <Button
+            style="?android:attr/buttonStyleSmall"
+            android:id="@+id/button_mainmenu_login"
+            android:text="@string/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/button_mainmenu_browseshoppinglists"
+            android:onClick="login"/>
+
 </RelativeLayout>

@@ -22,6 +22,24 @@
     <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
     <string name="pull_to_refresh_tap_label">Tap to refresh&#8230;</string>
 
+    <!-- LoginActivity -->
+    <string name="title_activity_login">Login</string>
+    <string name="field_email">Email</string>
+    <string name="field_password">Password</string>
+    <string name="login">Login</string>
+
+    <!-- Field Validation error messages -->
+    <string name="field_validation_no_input">The field can not be empty</string>
+    <string name="field_validation_same_input">The fields cannot be the same</string>
+    <string name="field_validation_unknown_location">Unknown location(s)</string>
+    <string name="field_validation_too_short">The field does not contain enough characters</string>
+    <string name="field_validation_too_long">The field contains too many characters</string>
+    <string name="field_validation_number">The field can not contain letters</string>
+    <string name="field_validation_string">The field can not contain numbers</string>
+    <string name="field_validation_not_numeric">The field can only contain numbers</string>
+    <string name="field_validation_not_alphanumeric">The field can only contain letters and numbers</string>
+    <string name="field_validation_not_an_email">The field must contain a valid e-mail address</string>
+
     <!-- Unsorted -->
     <string name="hello_world">Hello world!</string>
     

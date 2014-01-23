@@ -25,6 +25,11 @@ public class MainMenuActivity extends Activity {
 		Intent shoppingListBrowserIntent = new Intent(this, Registry.SHOPPING_LIST_BROWSER_ACTIVITY);
 		this.startActivity(shoppingListBrowserIntent);
 	}
+
+    public void login(View view){
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        this.startActivity(loginIntent);
+    }
 	
 	
 	private void initializeActivity(){
