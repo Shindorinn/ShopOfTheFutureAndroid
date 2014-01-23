@@ -1,39 +1,52 @@
 package nl.futureworks.shopofthefuture.activity;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import com.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.exception.FieldValidationException;
 import nl.futureworks.shopofthefuture.logic.FieldValidator;
+import nl.futureworks.shopofthefuture.registry.Registry;
 
 
 public class LoginActivity extends Activity {
 
     EditText fieldEmail;
     EditText fieldPassword;
+    private SharedPreferences preferences;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         fieldEmail = (EditText) findViewById(R.id.email);
         fieldPassword = (EditText) findViewById(R.id.password);
-    }
-
-    public void onPause()
-    {
-        super.onPause();
-        this.finish();
+        preferences = getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
     }
 
     /**
-     * Starts the marketplace intent
+     * Finish logging in
      */
-    private void startIntent() {
-        Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-        startActivity(intent);
+    private void finishLogin(String loginToken) {
+        Editor editor = preferences.edit();
+        editor.putString(Registry.LOGIN_TOKEN, loginToken);
+        editor.putBoolean(Registry.APP_LOGIN, true);
+        editor.commit();
+        Log.d("DEBUG", preferences.getString(Registry.LOGIN_TOKEN, ""));
+
+        setResult(Registry.RESULT_OK);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(Registry.RESULT_CANCELLED);
+        finish();
     }
 
     public void attemptLogin(View view)
@@ -52,7 +65,7 @@ public class LoginActivity extends Activity {
         }
         if(validInput)
         {
-            startIntent();
+            finishLogin("token");
             //TODO: Attempt api login
             //TODO: Save login token
         }
