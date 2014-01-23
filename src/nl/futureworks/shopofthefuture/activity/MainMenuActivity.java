@@ -18,11 +18,11 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		this.initializeActivity();
+		initializeActivity();
 		
 		// Check if this is a resume
 		if(savedInstanceState != null){
-			Editor editor = this.preferences.edit();
+			Editor editor = preferences.edit();
 			
 			// Re-initialize the sharedPreferences
 			editor.putBoolean(Registry.APP_LOGIN, savedInstanceState.getBoolean(Registry.APP_LOGIN));
@@ -30,13 +30,16 @@ public class MainMenuActivity extends Activity {
 		}
 		
 		// Create SharedPreferences file
-		preferences = this.getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
-		
-		// Only start userLogin, if the login hasen't occurred yet.
-		if(!preferences.getBoolean(Registry.APP_LOGIN, Registry.APP_LOGIN_DEFAULT)){
-			login();		
-		}
+		preferences = getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
 	}
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(!loggedIn()){
+            login();
+        }
+    }
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		super.onActivityResult(requestCode, resultCode, data);
@@ -44,36 +47,46 @@ public class MainMenuActivity extends Activity {
 		switch(requestCode){
 		
 		case Registry.LOGIN_ACTIVITY_REQUEST_CODE :
-			if(resultCode == Registry.LOGIN_ACTIVITY_SUCCESS){
-				
-			}else if(resultCode == Registry.LOGIN_ACTIVITY_FAILED){
-				// TODO: Lock the account?
-			}else if(resultCode == Registry.RESULT_CANCELED){
-				// TODO: Try logging in..  or?
+			if(resultCode == Registry.LOGIN_ACTIVITY_FAILED){
+				login();
+			}else if(resultCode == Registry.RESULT_CANCELLED){
+				finish();
 			}
 		}
 	}
+
+    public boolean loggedIn()
+    {
+     return preferences.getBoolean(Registry.APP_LOGIN, Registry.APP_LOGIN_DEFAULT);
+    }
+
 	public void startShopping(View view){
 		Intent startShoppingIntent = new Intent(this, Registry.SHOPPING_ACTIVITY);
-		this.startActivity(startShoppingIntent); // TODO : StartActivityForResult + requestCode ?
+		startActivity(startShoppingIntent); // TODO : StartActivityForResult + requestCode ?
 	}
 	
 	
 	public void browseShoppingLists(View view){
 		Intent shoppingListBrowserIntent = new Intent(this, Registry.SHOPPING_LIST_BROWSER_ACTIVITY);
-		this.startActivity(shoppingListBrowserIntent);
+		startActivity(shoppingListBrowserIntent);
 	}
+
+    public void logout(View view){
+        Editor editor = preferences.edit();
+        editor.putString(Registry.LOGIN_TOKEN, null);
+        editor.putBoolean(Registry.APP_LOGIN, false);
+        editor.commit();
+        login();
+    }
 
     public void login(){
         Intent loginIntent = new Intent(this, Registry.LOGIN_ACTIVITY);
         //loginIntent.putExtra(Registry.DEFAULT_USERNAME, String()); TODO : If standard login is neccessary.
-        this.startActivityForResult(loginIntent, Registry.LOGIN_ACTIVITY_REQUEST_CODE);
+        startActivityForResult(loginIntent, Registry.LOGIN_ACTIVITY_REQUEST_CODE);
     }
-	
-    
-	
+
 	private void initializeActivity(){
-		this.setContentView(R.layout.activity_main_menu);
+		setContentView(R.layout.activity_main_menu);
 	}
 
    

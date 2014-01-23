@@ -24,9 +24,10 @@ public class Registry {
 	public static final String APP_LOGIN = "nl.futureworks.shopofthefuture.APP_LOGIN";
 	public static final boolean APP_LOGIN_DEFAULT = false;
 	public static final String SHARED_PREFERENCES_FILE_NAME = "nl.futureworks.shopofthefuture.sharedPreferences";
+    public static final String LOGIN_TOKEN = "nl.futureworks.shopofthefuture.LOGIN_TOKEN";
 	
 	// General App Request & Result codes
-	public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
+	public static final int RESULT_CANCELLED = Activity.RESULT_CANCELED;
 	public static final int RESULT_OK = Activity.RESULT_OK;
 	
 	// Login Activity Request & Result codes

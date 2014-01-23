@@ -12,6 +12,7 @@
 	<string name="start_shopping">Start Shopping</string>
     <string name="scan_barcode">Scan a barcode</string>
     <string name="browse_shopping_lists">Browse your shopping lists</string>
+    <string name="logout">Log out</string>
     
     <!-- ShoppingListBrowserActivity -->
     <string name="title_activity_shopping_list_browser">Saved shopping lists</string>
