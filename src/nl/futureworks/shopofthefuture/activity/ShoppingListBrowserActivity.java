@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
+import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 import nl.futureworks.shopofthefuture.R;
 
@@ -23,8 +24,8 @@ public class ShoppingListBrowserActivity extends Activity {
 	private PullToRefreshListView browserListView;
 	
 	//Mocks shopping list names
-	private ArrayList<String> mockNameArray;
-	private ArrayAdapter<String> adapter;
+	private ArrayList<ShoppingList> shoppingListArray;
+	private ArrayAdapter<ShoppingList> adapter;
 	
 	//Dummycounter
 	private int mockCounter = 0;
@@ -38,7 +39,7 @@ public class ShoppingListBrowserActivity extends Activity {
 		DatabaseHandler db = DatabaseHandler.getInstance(this);
 		db.sendQuery("user", null, null, null, null, null, null, null);
 		
-		initializeListView();
+		initializeListView(savedInstanceState);
 	}
 
 	@Override
@@ -50,14 +51,26 @@ public class ShoppingListBrowserActivity extends Activity {
 	
 	/**
 	 * Initializes the shopping list browser and sets the adapter
+	 * @param savedInstanceState, restores the ListView when available
 	 */
-	private void initializeListView(){
+	@SuppressWarnings("unchecked")
+	private void initializeListView(Bundle savedInstanceState){
 		browserListView = (PullToRefreshListView) findViewById(R.id.shoppinglistbrowser_listview);
 		
-		//Initialize itemArray and Adapter
-				mockNameArray = new ArrayList<String>();
-				adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mockNameArray);
-				browserListView.setAdapter(adapter);
+		//Check if savedInstanceState is set and restore ListView when possible
+		if (savedInstanceState != null) {
+			ArrayList<ShoppingList> shoppingLists = (ArrayList<ShoppingList>) savedInstanceState.getSerializable("ShoppingLists");
+	        if (shoppingLists != null) {
+	            shoppingListArray = shoppingLists;
+	        }
+	       
+	    } else {
+	        	shoppingListArray = new ArrayList<ShoppingList>();
+	    }
+		
+		//Initialize Adapter
+		adapter = new ArrayAdapter<ShoppingList>(this, android.R.layout.simple_list_item_1, shoppingListArray);
+		browserListView.setAdapter(adapter);
 				
 		//Set OnRefreshListener
 		browserListView.setOnRefreshListener(new OnRefreshListener() {
@@ -79,24 +92,33 @@ public class ShoppingListBrowserActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * Save instance state to restore the ListView after onStop() call 
+	 */
+	public void onSaveInstanceState(Bundle savedState) {
+	    super.onSaveInstanceState(savedState);
+	    
+	    savedState.putSerializable("ShoppingLists", shoppingListArray);
+	}
+	
 	//TODO : Replace with nl.futureworks.shopofthefuture.task
-	private class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<String>> {
+	private class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<ShoppingList>> {
 		
 		@Override
-		protected ArrayList<String> doInBackground(Void... params) {
+		protected ArrayList<ShoppingList> doInBackground(Void... params) {
 			//Simulate load of data
 			try{
-				Thread.sleep(2000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			mockNameArray.add("List " + mockCounter);
+			shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, null));
 			mockCounter++;
-			return mockNameArray;
+			return shoppingListArray;
 		}		
 		
 		@Override
-		protected void onPostExecute(ArrayList<String> result) {
+		protected void onPostExecute(ArrayList<ShoppingList> result) {
 			browserListView.onRefreshComplete();
 			
 			super.onPostExecute(result);
