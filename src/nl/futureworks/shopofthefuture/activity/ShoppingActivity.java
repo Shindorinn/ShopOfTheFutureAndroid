@@ -1,17 +1,18 @@
 package nl.futureworks.shopofthefuture.activity;
 
-import android.widget.Toast;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import android.widget.Toast;
 import android.os.Bundle;
-import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+
 import nl.futureworks.shopofthefuture.R;
 
-public class ShoppingActivity extends Activity {
+public class ShoppingActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

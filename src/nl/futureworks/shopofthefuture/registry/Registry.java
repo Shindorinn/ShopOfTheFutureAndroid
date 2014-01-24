@@ -29,6 +29,7 @@ public class Registry {
 	// General App Request & Result codes
 	public static final int RESULT_CANCELLED = Activity.RESULT_CANCELED;
 	public static final int RESULT_OK = Activity.RESULT_OK;
+	public static final int RESULT_SHUTDOWN_APP = 666;
 	
 	// Login Activity Request & Result codes
 	public static final int LOGIN_ACTIVITY_REQUEST_CODE = 1001;
