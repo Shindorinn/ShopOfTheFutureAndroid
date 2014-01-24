@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.futureworks.shopofthefuture"
+    package="nl.futureworks.shopofthefuture"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="18" />
+
+    <instrumentation
+            android:name="android.test.InstrumentationTestRunner"
+            android:targetPackage="nl.futureworks.shopofthefuture" />
 
     <application
         android:allowBackup="true"
@@ -34,7 +38,7 @@
             android:name="nl.futureworks.shopofthefuture.activity.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
-
+        <uses-library android:name="android.test.runner" />
     </application>
 
 </manifest>

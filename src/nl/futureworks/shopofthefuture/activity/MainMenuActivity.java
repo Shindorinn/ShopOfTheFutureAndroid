@@ -8,8 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.View;
-
-import com.futureworks.shopofthefuture.R;
+import nl.futureworks.shopofthefuture.R;
 
 public class MainMenuActivity extends Activity {
 

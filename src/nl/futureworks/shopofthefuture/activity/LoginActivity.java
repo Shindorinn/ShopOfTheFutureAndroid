@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import com.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.exception.FieldValidationException;
 import nl.futureworks.shopofthefuture.logic.FieldValidator;
 import nl.futureworks.shopofthefuture.registry.Registry;
+import nl.futureworks.shopofthefuture.R;
+
 
 
 public class LoginActivity extends Activity {

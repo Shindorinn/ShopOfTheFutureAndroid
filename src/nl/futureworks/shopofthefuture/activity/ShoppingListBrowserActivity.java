@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
 import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
-
-import com.futureworks.shopofthefuture.R;
+import nl.futureworks.shopofthefuture.R;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
