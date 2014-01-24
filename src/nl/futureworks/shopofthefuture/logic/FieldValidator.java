@@ -1,7 +1,7 @@
 package nl.futureworks.shopofthefuture.logic;
 
 import android.widget.EditText;
-import com.futureworks.shopofthefuture.R;
+import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.exception.FieldValidationException;
 
 public class FieldValidator {

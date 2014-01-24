@@ -85,8 +85,8 @@ public class ShoppingListBrowserActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-				String selectedItem = (String) (browserListView.getItemAtPosition(arg2));
-				Log.d("Browser", selectedItem);
+				ShoppingList selectedList = (ShoppingList) (browserListView.getItemAtPosition(arg2));
+				Log.d("Browser", selectedList.toString());
 			}
 			
 		});

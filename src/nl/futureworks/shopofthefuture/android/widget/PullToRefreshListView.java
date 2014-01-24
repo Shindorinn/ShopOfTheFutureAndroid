@@ -19,7 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AbsListView.OnScrollListener;
 
-import com.futureworks.shopofthefuture.R;
+import nl.futureworks.shopofthefuture.R;
 
 public class PullToRefreshListView extends ListView implements OnScrollListener {
 
