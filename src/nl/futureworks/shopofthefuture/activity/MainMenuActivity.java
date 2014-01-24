@@ -1,5 +1,6 @@
 package nl.futureworks.shopofthefuture.activity;
 
+import android.preference.PreferenceManager;
 import nl.futureworks.shopofthefuture.registry.Registry;
 import android.app.Activity;
 import android.content.Context;
@@ -17,19 +18,7 @@ public class MainMenuActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		initializeActivity();
-		
-		// Check if this is a resume
-		if(savedInstanceState != null){
-			Editor editor = preferences.edit();
-			
-			// Re-initialize the sharedPreferences
-			editor.putBoolean(Registry.APP_LOGIN, savedInstanceState.getBoolean(Registry.APP_LOGIN));
-			editor.commit();
-		}
-		
-		// Create SharedPreferences file
-		preferences = getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+		initializeActivity(savedInstanceState);
 	}
     @Override
     protected void onResume(){
@@ -53,6 +42,12 @@ public class MainMenuActivity extends Activity {
 			}
 		}
 	}
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+
+    }
 
     public boolean loggedIn()
     {
@@ -84,8 +79,23 @@ public class MainMenuActivity extends Activity {
         startActivityForResult(loginIntent, Registry.LOGIN_ACTIVITY_REQUEST_CODE);
     }
 
-	private void initializeActivity(){
+	private void initializeActivity(Bundle savedInstanceState){
 		setContentView(R.layout.activity_main_menu);
+
+        // Create SharedPreferences file
+        preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        preferences = getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+
+        // Check if this is a resume
+        if(savedInstanceState != null){
+            savedInstanceState.get(Registry.SHARED_PREFERENCES_FILE_NAME);
+            Editor editor = preferences.edit();
+
+            // Re-initialize the sharedPreferences
+            editor.putBoolean(Registry.APP_LOGIN, savedInstanceState.getBoolean(Registry.APP_LOGIN));
+            editor.commit();
+        }
+
 	}
 
    
