@@ -1,6 +1,5 @@
 package nl.futureworks.shopofthefuture.activity;
 
-import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.registry.Registry;
 
 import android.app.Activity;

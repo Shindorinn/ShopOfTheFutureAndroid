@@ -35,7 +35,9 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		setContentView(R.layout.activity_shopping_list_browser);
 		
 		//Database Test
-		DatabaseHandler db = DatabaseHandler.getInstance(this);
+		String dbName = "shopofthefuture";
+		int dbVersion = 1;
+		DatabaseHandler db = DatabaseHandler.getInstance(this, dbName, dbVersion);
 		db.sendQuery("user", null, null, null, null, null, null, null);
 		
 		initializeListView(savedInstanceState);

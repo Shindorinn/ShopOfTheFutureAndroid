@@ -14,21 +14,25 @@ import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper{
 	
-	final static int DB_VERSION = 1;
-	final static String DB_NAME = "shopofthefuture.s3db";
+	private int dbVersion;
+	private String dbName;
 	
 	private Context context;
 	
 	private static DatabaseHandler db;
 	     
-	private DatabaseHandler(Context context) {
-		super(context, DB_NAME, null, DB_VERSION);
+	private DatabaseHandler(Context context, String dbName, int dbVersion) {
+		super(context, dbName, null, dbVersion);
+		
+		this.dbName = dbName;
+		this.dbVersion = dbVersion;
 		this.context = context;
 	}
 	
-	public static DatabaseHandler getInstance(Context context){
+	public static DatabaseHandler getInstance(Context context, String dbName, int dbVersion){
 		if (db == null){
-			db = new DatabaseHandler(context);
+			dbName = (dbName+".s3db");
+			db = new DatabaseHandler(context, dbName, dbVersion);
 			return db;
 		}
 		else{
@@ -119,8 +123,24 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 	 * @return boolean, dbFileExists
 	 */
 	public boolean databaseExists() {
-		 File dbFile = context.getDatabasePath(DB_NAME);
+		 File dbFile = context.getDatabasePath(dbName);
 		 return dbFile.exists();
+	}
+	
+	/**
+	 * Returns the name of the sqlite database (Also works for API 14 and lower)
+	 * @return String, dbName
+	 */
+	public String getDBName(){
+		return dbName;	
+	}
+	
+	/**
+	 * Returns the version of the database
+	 * @return int, dbVersion
+	 */
+	public int getDBVersion(){
+		return dbVersion;
 	}
 	
 	/**
