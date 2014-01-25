@@ -82,8 +82,10 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		});
 		
 		//Set OnClickListener
+		//TODO : Remove item/change pieces option, long click listener?
 		browserListView.setOnItemClickListener(new OnItemClickListener() {
-
+			
+			//TODO : Change to shopping cart with items in shopping list
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				ShoppingList selectedList = (ShoppingList) (browserListView.getItemAtPosition(arg2));
@@ -107,6 +109,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		
 		@Override
 		protected ArrayList<ShoppingList> doInBackground(Void... params) {
+			//TODO : Make connection to API, load shopping lists
 			//Simulate load of data
 			try{
 				Thread.sleep(500);
