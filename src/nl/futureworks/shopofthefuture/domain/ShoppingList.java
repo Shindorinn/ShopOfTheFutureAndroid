@@ -2,7 +2,10 @@ package nl.futureworks.shopofthefuture.domain;
 
 import java.util.HashMap;
 
-public class ShoppingList {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ShoppingList implements Parcelable {
 	
 	private int id;
 	private int userID;
@@ -16,6 +19,25 @@ public class ShoppingList {
 		this.name = name;
 		this.items = items;
 	}
+	
+	private ShoppingList(Parcel in) {
+		this.id = in.readInt();
+		this.userID = in.readInt();
+		this.name = in.readString();
+		items = new HashMap<ShoppingListItem, Integer>();
+		in.readMap(items, ShoppingListItem.class.getClassLoader());
+    }
+	
+	// this is used to regenerate the object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<ShoppingList> CREATOR = new Parcelable.Creator<ShoppingList>() {
+        public ShoppingList createFromParcel(Parcel in) {
+            return new ShoppingList(in);
+        }
+
+        public ShoppingList[] newArray(int size) {
+            return new ShoppingList[size];
+        }
+    };
 	
 	/**
 	 * Add an item to the shopping list 
@@ -121,5 +143,18 @@ public class ShoppingList {
 	 */
 	public HashMap<ShoppingListItem, Integer> getItems() {
 		return items;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeInt(userID);
+		dest.writeString(name);
+		dest.writeMap(items);
 	}
 }

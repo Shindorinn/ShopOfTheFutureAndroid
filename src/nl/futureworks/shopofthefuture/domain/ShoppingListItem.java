@@ -1,6 +1,9 @@
 package nl.futureworks.shopofthefuture.domain;
 
-public class ShoppingListItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ShoppingListItem implements Parcelable{
 	private final String barcode;
 	private String name;
 	private double price;
@@ -10,6 +13,23 @@ public class ShoppingListItem {
 		this.name = name;
 		this.price = price;
 	}
+	
+	private ShoppingListItem(Parcel in) {
+		this.barcode = in.readString();
+		this.name = in.readString();
+		this.price = in.readDouble();
+	}
+
+	// this is used to regenerate the object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<ShoppingListItem> CREATOR = new Parcelable.Creator<ShoppingListItem>() {
+        public ShoppingListItem createFromParcel(Parcel in) {
+            return new ShoppingListItem(in);
+        }
+
+        public ShoppingListItem[] newArray(int size) {
+            return new ShoppingListItem[size];
+        }
+    };
 	
 	/**
 	 * Sets a new name for this ShoppingItem
@@ -53,5 +73,17 @@ public class ShoppingListItem {
 	 */
 	public Double getPrice() {
 		return price;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(barcode);
+		dest.writeString(name);
+		dest.writeDouble(price);	
 	}
 }

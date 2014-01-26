@@ -1,16 +1,18 @@
 package nl.futureworks.shopofthefuture.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
+import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 import nl.futureworks.shopofthefuture.R;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -89,9 +91,10 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				ShoppingList selectedList = (ShoppingList) (browserListView.getItemAtPosition(arg2));
-				Log.d("Browser", selectedList.toString());
-			}
-			
+				Intent intent = new Intent(ShoppingListBrowserActivity.this, ItemBrowserActivity.class);
+				intent.putExtra("SelectedList", selectedList);
+				startActivity(intent);
+			}	
 		});
 	}
 	
@@ -116,8 +119,20 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, null));
+			HashMap<ShoppingListItem, Integer> map = new HashMap<ShoppingListItem, Integer>();
+			map.put(new ShoppingListItem("123", "Cheese", 1.10), 1);
+			map.put(new ShoppingListItem("124", "Ham", 1.95), 2);
+			map.put(new ShoppingListItem("125", "Cookies", 0.95), 6);
+			map.put(new ShoppingListItem("126", "Milk", 1.45), 1);
+			map.put(new ShoppingListItem("127", "Bread", 1.00), 3);
+			
+			if (mockCounter == 3){
+				shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, null));
+			} else{
+				shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, map));
+			}
 			mockCounter++;
+			
 			return shoppingListArray;
 		}		
 		
