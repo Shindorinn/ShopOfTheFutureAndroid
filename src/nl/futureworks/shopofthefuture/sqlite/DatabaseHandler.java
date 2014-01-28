@@ -14,12 +14,22 @@ import android.util.Log;
 
 public class DatabaseHandler extends SQLiteOpenHelper{
 	
-	private int dbVersion;
-	private String dbName;
+	private final int dbVersion;
+	private final String dbName;
 	
+	private static final int DEFAULT_DB_VERSION = 1;
+	private static final String DEFAULT_DB_NAME = "shopofthefuture.s3db";
 	private Context context;
 	
 	private static DatabaseHandler db;
+	
+	private DatabaseHandler(Context context) {
+		super(context, DEFAULT_DB_NAME, null, DEFAULT_DB_VERSION);
+		
+		this.dbName = DEFAULT_DB_NAME;
+		this.dbVersion = DEFAULT_DB_VERSION;
+		this.context = context;
+	}
 	     
 	private DatabaseHandler(Context context, String dbName, int dbVersion) {
 		super(context, dbName, null, dbVersion);
@@ -27,6 +37,16 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 		this.dbName = dbName;
 		this.dbVersion = dbVersion;
 		this.context = context;
+	}
+	
+	public static DatabaseHandler getInstance(Context context){
+		if (db == null){
+			db = new DatabaseHandler(context);
+			return db;
+		}
+		else{
+			return db;
+		}
 	}
 	
 	public static DatabaseHandler getInstance(Context context, String dbName, int dbVersion){
