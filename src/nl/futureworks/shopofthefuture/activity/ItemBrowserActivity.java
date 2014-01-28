@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import nl.futureworks.shopofthefuture.R;
+import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import android.app.Activity;
@@ -87,8 +88,12 @@ public class ItemBrowserActivity extends Activity {
 	    }
 		
 		//Initialize Adapter
-		adapter = new SimpleAdapter(this, shoppingListItemArray, R.layout.item_browser_row,
+		if (ShoppingCart.shoppingCartExists()) {
+			
+		} else {
+			adapter = new SimpleAdapter(this, shoppingListItemArray, R.layout.item_browser_row,
 			      new String[] {"name", "price", "amount"}, new int[] {R.id.name_cell, R.id.price_cell, R.id.amount_cell});
+		}
 		listView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();
 	}
