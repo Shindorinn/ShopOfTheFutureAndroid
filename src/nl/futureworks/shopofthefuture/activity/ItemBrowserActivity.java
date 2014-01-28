@@ -56,7 +56,12 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.item_browser, menu);
+		if (ShoppingCart.shoppingCartExists()) {
+			getMenuInflater().inflate(R.menu.item_browser_cart, menu);
+		}
+		else {
+			getMenuInflater().inflate(R.menu.item_browser_list, menu);
+		}
 		return true;
 	}
 	
@@ -66,8 +71,15 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    {
 	    case R.id.convert_to_cart:
 	        cart = selectedShoppingList.convertToCart();
-	        displayItems(null);
+	        this.recreate();
+	        break;
+	        
+	    case R.id.clear_cart:
+	    	cart.clearCart();
+	    	this.recreate();
+	    	break;
 	    }
+	    	
 	    return true;
 	}
 	

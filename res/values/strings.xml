@@ -25,6 +25,7 @@
     <string name="no_item_text">No items are in this shopping list yet!</string>
     <string name="change_button_text">Change amount</string>
     <string name="convert_to_cart">Create shopping cart</string>
+    <string name="clear_cart">Clear the shopping cart</string>
     <string name="change_amount">Change amount</string>
     <string name="delete_item">Delete Item</string>
     <string name="amount_title">User input</string>
