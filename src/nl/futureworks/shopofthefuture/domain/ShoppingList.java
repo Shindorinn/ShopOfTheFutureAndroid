@@ -11,7 +11,7 @@ public class ShoppingList implements Parcelable {
 	private int userID;
 	private String name;
 	
-	private HashMap<ShoppingListItem, Integer> items;
+	protected HashMap<ShoppingListItem, Integer> items;
 	
 	public ShoppingList(int id, int userID, String name, HashMap<ShoppingListItem, Integer> items) {
 		this.id = id;
@@ -40,44 +40,6 @@ public class ShoppingList implements Parcelable {
     };
 	
 	/**
-	 * Add an item to the shopping list 
-	 * @param item, the item to be added
-	 * 		  amount, the amount of this item
-	 */
-	public void addItem(ShoppingListItem item, int amount) {
-		if((item != null && amount > 0) && !items.containsKey(item)) {
-			items.put(item, amount);
-		}
-	}
-	
-	/**
-	 * Changes the amount of a single ShoppingItem
-	 * @param item, the ShoppingItem in question
-	 * @param amount, the new amount for this ShoppingItem
-	 */
-	public void changeAmount(ShoppingListItem item, int amount) {
-		if((item != null && amount > 0) && items.containsKey(item)) {
-			items.put(item, amount);
-		}
-	}
-	
-	/**
-	 * Removes the provided item from the shopping list
-	 * @param item, the item to be removed
-	 */
-	public void removeItem(ShoppingListItem item) {
-		if(item == null) {
-			return;
-		}
-		
-		for (ShoppingListItem key : items.keySet()) {
-			if(item.equals(key)) {
-				items.remove(key);
-			}
-		}
-	}
-	
-	/**
 	 * Replaces the old shopping list with a new one
 	 * Old shopping list will be lost
 	 * @param items, the new HashMap with items and their amount
@@ -93,6 +55,14 @@ public class ShoppingList implements Parcelable {
 	 */
 	public boolean itemExists(ShoppingListItem item) {
 		return items.containsKey(item);	
+	}
+	
+	/**
+	 * Converts the current Shopping List as Shopping Cart and returns the ShoppingCart
+	 * @return ShoppingCart, cart
+	 */
+	public ShoppingCart convertToCart() {
+		return ShoppingCart.getInstance(id, userID, name, items);
 	}
 	
 	/**
@@ -126,15 +96,6 @@ public class ShoppingList implements Parcelable {
 	 */
 	public String getName() {
 		return name;
-	}
-	
-	/**
-	 * Get the amount of the ShoppingItem specified
-	 * @param item, the ShoppingItem
-	 * @return int, the amount of the specified ShoppingItem
-	 */
-	public int getItemAmount(ShoppingListItem item) {
-		return items.get(item);
 	}
 	
 	/**
