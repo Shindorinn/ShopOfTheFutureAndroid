@@ -1,6 +1,6 @@
 package nl.futureworks.shopofthefuture.domain;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,9 +11,9 @@ public class ShoppingList implements Parcelable {
 	private int userID;
 	private String name;
 	
-	protected HashMap<ShoppingListItem, Integer> items;
+	protected ConcurrentHashMap<ShoppingListItem, Integer> items;
 	
-	public ShoppingList(int id, int userID, String name, HashMap<ShoppingListItem, Integer> items) {
+	public ShoppingList(int id, int userID, String name, ConcurrentHashMap<ShoppingListItem, Integer> items) {
 		this.id = id;
 		this.userID = userID;
 		this.name = name;
@@ -24,7 +24,7 @@ public class ShoppingList implements Parcelable {
 		this.id = in.readInt();
 		this.userID = in.readInt();
 		this.name = in.readString();
-		items = new HashMap<ShoppingListItem, Integer>();
+		items = new ConcurrentHashMap<ShoppingListItem, Integer>();
 		in.readMap(items, ShoppingListItem.class.getClassLoader());
     }
 	
@@ -44,7 +44,7 @@ public class ShoppingList implements Parcelable {
 	 * Old shopping list will be lost
 	 * @param items, the new HashMap with items and their amount
 	 */
-	public void replaceItemList(HashMap<ShoppingListItem, Integer> items) {
+	public void replaceItemList(ConcurrentHashMap<ShoppingListItem, Integer> items) {
 		this.items = items;
 	}
 	
@@ -59,7 +59,7 @@ public class ShoppingList implements Parcelable {
 	
 	/**
 	 * Converts the current Shopping List as Shopping Cart and returns the ShoppingCart
-	 * @return ShoppingCart, cart
+	 * 
 	 */
 	public ShoppingCart convertToCart() {
 		return ShoppingCart.getInstance(id, userID, name, items);
@@ -102,7 +102,7 @@ public class ShoppingList implements Parcelable {
 	 * Getter for itemList
 	 * @return HashMap<ShoppingListItem, Integer>, List of items ShoppingItem -> amount
 	 */
-	public HashMap<ShoppingListItem, Integer> getItems() {
+	public ConcurrentHashMap<ShoppingListItem, Integer> getItems() {
 		return items;
 	}
 

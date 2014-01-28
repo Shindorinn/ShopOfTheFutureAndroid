@@ -1,7 +1,7 @@
 package nl.futureworks.shopofthefuture.test;
 
-import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
@@ -24,7 +24,7 @@ public class ShoppingCartAndItemTest extends AndroidTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		
-		HashMap<ShoppingListItem, Integer> map = new HashMap<ShoppingListItem, Integer>();
+		ConcurrentHashMap<ShoppingListItem, Integer> map = new ConcurrentHashMap<ShoppingListItem, Integer>();
 		map.put(item1, 2);
 		ShoppingList list = new ShoppingList(1, 1, "TestList", map);
 		cart = list.convertToCart();
@@ -61,7 +61,7 @@ public class ShoppingCartAndItemTest extends AndroidTestCase {
 	
 	public void testChangeAmount() {
 		try {
-			HashMap<ShoppingListItem, Integer> items = cart.getItems();
+			ConcurrentHashMap<ShoppingListItem, Integer> items = cart.getItems();
 			for(Entry<ShoppingListItem, Integer> en: items.entrySet()){
 				cart.changeAmount(en.getKey(), 10);
 				assertTrue("New amount should be 10", cart.getItemAmount(en.getKey()) == 10);

@@ -1,6 +1,6 @@
 package nl.futureworks.shopofthefuture.domain;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
@@ -9,11 +9,11 @@ import nl.futureworks.shopofthefuture.exception.ShoppingListModificationExceptio
 public class ShoppingCart extends ShoppingList{
 	private static ShoppingCart cart;
 
-	private ShoppingCart(int id, int userID, String name,HashMap<ShoppingListItem, Integer> items) {
+	private ShoppingCart(int id, int userID, String name, ConcurrentHashMap<ShoppingListItem, Integer> items) {
 		super(id, userID, name, items);
 	}
 	
-	protected static ShoppingCart getInstance(int id, int userID, String name, HashMap<ShoppingListItem, Integer> items) {
+	protected static ShoppingCart getInstance(int id, int userID, String name, ConcurrentHashMap<ShoppingListItem, Integer> items) {
 		if (cart == null){
 			cart = new ShoppingCart(id, userID, name, items);
 			return cart;

@@ -23,6 +23,15 @@
     <string name="item_colomn_price">Price</string>
     <string name="item_colomn_amount">Amount</string>
     <string name="no_item_text">No items are in this shopping list yet!</string>
+    <string name="change_button_text">Change amount</string>
+    <string name="convert_to_cart">Create shopping cart</string>
+    <string name="change_amount">Change amount</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="amount_title">User input</string>
+    <string name="amount_message">Please enter amount</string>
+    <string name="error_no_text">Please enter a number</string>
+    <string name="error_invalid_int">This is not a valid number</string>
+    <string name="error_invalid_amount">This is not a valid amount</string>
 
     <!-- PullToRefreshListView -->
     <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>

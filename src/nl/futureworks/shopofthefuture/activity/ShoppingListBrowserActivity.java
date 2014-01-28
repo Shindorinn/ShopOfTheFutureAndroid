@@ -1,7 +1,7 @@
 package nl.futureworks.shopofthefuture.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
@@ -82,10 +82,8 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		});
 		
 		//Set OnClickListener
-		//TODO : Remove item/change pieces option, long click listener?
 		browserListView.setOnItemClickListener(new OnItemClickListener() {
 			
-			//TODO : Change to shopping cart with items in shopping list
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				ShoppingList selectedList = (ShoppingList) (browserListView.getItemAtPosition(arg2));
@@ -117,7 +115,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			HashMap<ShoppingListItem, Integer> map = new HashMap<ShoppingListItem, Integer>();
+			ConcurrentHashMap<ShoppingListItem, Integer> map = new ConcurrentHashMap<ShoppingListItem, Integer>();
 			map.put(new ShoppingListItem("123", "Cheese", 1.10), 1);
 			map.put(new ShoppingListItem("124", "Ham", 1.95), 2);
 			map.put(new ShoppingListItem("125", "Cookies", 0.95), 6);
