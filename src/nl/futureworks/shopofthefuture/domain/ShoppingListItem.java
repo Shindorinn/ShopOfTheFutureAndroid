@@ -86,4 +86,13 @@ public class ShoppingListItem implements Parcelable{
 		dest.writeString(name);
 		dest.writeDouble(price);	
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof ShoppingListItem){
+		  ShoppingListItem toCompare = (ShoppingListItem) o;
+		  return this.barcode.equals(toCompare.barcode);
+		}
+		return false;
+	}
 }

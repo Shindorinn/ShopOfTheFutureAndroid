@@ -1,15 +1,15 @@
 package nl.futureworks.shopofthefuture.registry;
 
 import android.app.Activity;
+import nl.futureworks.shopofthefuture.activity.ItemBrowserActivity;
 import nl.futureworks.shopofthefuture.activity.LoginActivity;
-import nl.futureworks.shopofthefuture.activity.ShoppingActivity;
 import nl.futureworks.shopofthefuture.activity.ShoppingListBrowserActivity;
 
 public class Registry {
 
-	public static final Class<?> SHOPPING_ACTIVITY = ShoppingActivity.class;
 	public static final Class<?> SHOPPING_LIST_BROWSER_ACTIVITY = ShoppingListBrowserActivity.class;
 	public static final Class<?> LOGIN_ACTIVITY = LoginActivity.class;
+	public static final Class<?> ITEM_BROWSER_ACTIVITY = ItemBrowserActivity.class;
 	
 	// API Info
 	public static final String API_URL = "";

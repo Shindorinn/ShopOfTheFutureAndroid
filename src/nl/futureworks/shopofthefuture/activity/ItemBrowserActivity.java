@@ -5,13 +5,19 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
+import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.SparseArray;
@@ -26,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener {
 	private ShoppingList selectedShoppingList;
@@ -36,21 +43,14 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	
 	private SimpleAdapter adapter;
 	private LinkedList<HashMap<String, String>> shoppingListItemArray;
+	
+	private DatabaseHandler db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_item_browser);
-		
-		selectedShoppingList = getIntent().getParcelableExtra("SelectedList");
-		idToObject = new SparseArray<ShoppingListItem>();
-		
-		items = selectedShoppingList.getItems();
-		setTitle(selectedShoppingList.getName());
-		
-		if (items != null && items.size() > 0) {
-			displayItems(savedInstanceState);
-		} 
+		db = DatabaseHandler.getInstance(this);
+		initializeLayout(savedInstanceState);
 	}
 
 	@Override
@@ -78,6 +78,10 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    	cart.clearCart();
 	    	this.recreate();
 	    	break;
+	    	
+	    case R.id.scan_barcode:
+	    	scanBarcode();
+	    	break;
 	    }
 	    	
 	    return true;
@@ -90,53 +94,11 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		switch(item.getItemId())
 	    {
 			case R.id.delete_item:
-				cart.removeItem(cartItem);
-				idToObject.remove(selectedId);
-				
-				displayItems(null);
+				deleteItem(cartItem);
 				break;
 	        
 			case R.id.change_amount:
-				final EditText input = new EditText(this);
-				input.setInputType(InputType.TYPE_CLASS_NUMBER);
-				
-				AlertDialog.Builder builder = getAlertDialog(input, R.string.amount_title, R.string.amount_message);
-				final AlertDialog dialog = builder.create();
-				dialog.show();
-				
-				Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
-				okButton.setOnClickListener(new View.OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						String text = input.getText().toString();
-			        	
-			        	//Check input
-			        	if (text.equals("")) {
-			            	input.setError(getString(R.string.error_no_text));
-			            	return;
-			            }
-			        	else if (text.length() > 5) {
-			        		input.setError(getString(R.string.error_invalid_int));
-			            	return;
-			        	}
-			        	
-			        	int value = Integer.parseInt(text);
-			        	if (value <= 0) {
-			        		input.setError(getString(R.string.error_invalid_amount));
-			            	return;
-			        	}
-			        	
-			            try {
-							cart.changeAmount(cartItem, value);
-							displayItems(null);
-							dialog.dismiss();
-						} catch (ShoppingListModificationException e) {
-							e.printStackTrace();
-						}
-					}
-				});
-					
+				changeAmount(cartItem);	
 				break;
 	    }
 		return true;
@@ -152,6 +114,42 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    savedState.putSparseParcelableArray("IdToObject", idToObject);
 	    savedState.putParcelable("ShoppingCart", cart);
 	    savedState.putInt("SelectedId", selectedId);
+	}
+	
+	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null && scanResult.getContents() != null) {
+            
+            String barcode = scanResult.getContents();
+            HashMap<String, String> row = db.sendQuery("item", null, "barcode = '" + barcode + "'", null, null, null, null, "1").get(0);
+            
+            String name = row.get("name");
+            double price = Double.parseDouble(row.get("price"));
+            
+            ShoppingListItem item = new ShoppingListItem(barcode, name, price);
+            
+            if (!cart.contains(item)) {
+            	try {
+					cart.addItem(item, 1);
+					displayItems(null);
+				} catch (ShoppingListModificationException e) {
+					e.printStackTrace();
+				}
+	            Toast toast = Toast.makeText(this, scanResult.getContents(), Toast.LENGTH_LONG);
+	            toast.show();
+            }
+	            
+	        else {
+	        	ShoppingListItem memoryCorrectItem = cart.getDuplicate(item); 
+	        	String[] options = new String[] {getString(R.string.delete_item), getString(R.string.change_amount)};
+	        	createOptionDialog(R.string.amount_title, memoryCorrectItem, options).show();
+	        }
+        }
+    }
+	
+	public void scanBarcode() {
+		IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.initiateScan();
 	}
 	
 	/**
@@ -241,6 +239,40 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	}
 	
 	/**
+	 * Create an option dialog
+	 * @param choiceList
+	 * @return
+	 */
+	private Dialog createOptionDialog(int title, ShoppingListItem item, final String[] choiceList) {
+	    final ShoppingListItem cartItem = item;
+		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    builder.setTitle(getString(title));
+	    builder.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {   
+
+	        }
+	    });
+	   builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	        	int selectedPosition = ((AlertDialog)dialog).getListView().getCheckedItemPosition();
+	        	
+	        	if (choiceList[selectedPosition].equals(getString(R.string.delete_item))) {
+	        		deleteItem(cartItem);
+	        	}
+	        	else if (choiceList[selectedPosition].equals(getString(R.string.change_amount))) {
+	        		changeAmount(cartItem);
+	        	}
+	        }
+	    });
+	    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int whichButton) {
+	        }
+	    });
+	    return builder.create();
+	}
+	
+	/**
 	 * Creates a LinkedList representation of the ShoppingListItem for the ListView 
 	 * @return
 	 */
@@ -266,5 +298,81 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		itemArray.addFirst(map);
 		
 		return itemArray;
+	}
+	
+	/**
+	 * Deletes an item from the ShoppingCart
+	 * @param cartItem
+	 */
+	private void deleteItem(ShoppingListItem cartItem) {
+		cart.removeItem(cartItem);
+		idToObject.remove(selectedId);
+		
+		displayItems(null);
+	}
+	
+	/**
+	 * Changes the amount of an ShoppingCartItem
+	 * @param item
+	 */
+	private void changeAmount(ShoppingListItem item) {
+		final ShoppingListItem cartItem = item;
+		final EditText input = new EditText(this);
+		input.setInputType(InputType.TYPE_CLASS_NUMBER);
+		
+		AlertDialog.Builder builder = getAlertDialog(input, R.string.amount_title, R.string.amount_message);
+		final AlertDialog dialog = builder.create();
+		dialog.show();
+		
+		Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+		okButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String text = input.getText().toString();
+	        	
+	        	//Check input
+	        	if (text.equals("")) {
+	            	input.setError(getString(R.string.error_no_text));
+	            	return;
+	            }
+	        	else if (text.length() > 5) {
+	        		input.setError(getString(R.string.error_invalid_int));
+	            	return;
+	        	}
+	        	
+	        	int value = Integer.parseInt(text);
+	        	if (value <= 0) {
+	        		input.setError(getString(R.string.error_invalid_amount));
+	            	return;
+	        	}
+	        	
+	            try {
+					cart.changeAmount(cartItem, value);
+					displayItems(null);
+					dialog.dismiss();
+				} catch (ShoppingListModificationException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+	
+	/**
+	 * Initialize the layout
+	 * @param savedInstanceState
+	 */
+	private void initializeLayout(Bundle savedInstanceState) {
+		setContentView(R.layout.activity_item_browser);
+		
+		selectedShoppingList = getIntent().getParcelableExtra("SelectedList");
+		idToObject = new SparseArray<ShoppingListItem>();
+		
+		items = selectedShoppingList.getItems();
+		setTitle(selectedShoppingList.getName());
+		
+		if (items != null && items.size() > 0) {
+			displayItems(savedInstanceState);
+		} 
 	}
 }

@@ -108,6 +108,12 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 			"CONSTRAINT shoppinglistitem_fk_barcode FOREIGN KEY (barcode) REFERENCES item(barcode) " +
 			");");
 			
+			//TODO Database insertion mock
+			database.execSQL("INSERT INTO 'user' VALUES ('1', 'Arjan', 'arjan@lol.nl', '0611739835', '1234')");
+			database.execSQL("INSERT INTO 'shoppinglist' VALUES ('1', '1', 'Dictionary')");
+			database.execSQL("INSERT INTO 'item' VALUES ('9781741793352', 'Korean phrasebook & dictionary', '6.95')");
+			database.execSQL("INSERT INTO 'item' VALUES ('9789043814102', 'Chinees spreken en begrijpen', '9.95')");
+			database.execSQL("INSERT INTO 'shoppinglistitem' VALUES ('1', '9789043814102', '2')");
 			Log.d("Sqlite Database", "Database created");
 		}
 		catch (SQLException e){

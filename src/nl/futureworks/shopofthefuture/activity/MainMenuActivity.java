@@ -31,11 +31,6 @@ public class MainMenuActivity extends BaseActivity {
         super.onSaveInstanceState(savedInstanceState);
 
     }
-
-	public void startShopping(View view){
-		Intent startShoppingIntent = new Intent(this, Registry.SHOPPING_ACTIVITY);
-		this.startActivity(startShoppingIntent); // TODO : StartActivityForResult + requestCode ?
-	}
 	
 	public void browseShoppingLists(View view){
 		Intent shoppingListBrowserIntent = new Intent(this, Registry.SHOPPING_LIST_BROWSER_ACTIVITY);

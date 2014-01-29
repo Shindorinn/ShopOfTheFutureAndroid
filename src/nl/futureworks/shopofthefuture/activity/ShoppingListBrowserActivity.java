@@ -1,17 +1,17 @@
 package nl.futureworks.shopofthefuture.activity;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
-import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
+import nl.futureworks.shopofthefuture.registry.Registry;
 import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
+import nl.futureworks.shopofthefuture.task.GetShoppingListsTask;
 import nl.futureworks.shopofthefuture.R;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -24,12 +24,9 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 	//Custom pull refresh ListView
 	private PullToRefreshListView browserListView;
 	
-	//Mocks shopping list names
 	private ArrayList<ShoppingList> shoppingListArray;
 	private ArrayAdapter<ShoppingList> adapter;
 	
-	//Dummycounter
-	private int mockCounter = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +74,13 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		browserListView.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				new GetShoppingListsTask().execute();
+				try {
+					shoppingListArray = new GetShoppingListsTask(ShoppingListBrowserActivity.this, browserListView, shoppingListArray).execute().get();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -87,7 +90,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				ShoppingList selectedList = (ShoppingList) (browserListView.getItemAtPosition(arg2));
-				Intent intent = new Intent(ShoppingListBrowserActivity.this, ItemBrowserActivity.class);
+				Intent intent = new Intent(ShoppingListBrowserActivity.this, Registry.ITEM_BROWSER_ACTIVITY);
 				intent.putExtra("SelectedList", selectedList);
 				startActivity(intent);
 			}	
@@ -102,44 +105,5 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 	    
 	    savedState.putSerializable("ShoppingLists", shoppingListArray);
 	}
-	
-	//TODO : Replace with nl.futureworks.shopofthefuture.task
-	private class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<ShoppingList>> {
-		
-		@Override
-		protected ArrayList<ShoppingList> doInBackground(Void... params) {
-			//TODO : Make connection to API, load shopping lists
-			//Simulate load of data
-			try{
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			ConcurrentHashMap<ShoppingListItem, Integer> map = new ConcurrentHashMap<ShoppingListItem, Integer>();
-			map.put(new ShoppingListItem("123", "Cheese", 1.10), 1);
-			map.put(new ShoppingListItem("124", "Ham", 1.95), 2);
-			map.put(new ShoppingListItem("125", "Cookies", 0.95), 6);
-			map.put(new ShoppingListItem("126", "Milk", 1.45), 1);
-			map.put(new ShoppingListItem("127", "Bread", 1.00), 3);
-			
-			if (mockCounter == 3){
-				shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, null));
-			} else{
-				shoppingListArray.add(new ShoppingList(mockCounter, 1, "List " + mockCounter, map));
-			}
-			mockCounter++;
-			
-			return shoppingListArray;
-		}		
-		
-		@Override
-		protected void onPostExecute(ArrayList<ShoppingList> result) {
-			browserListView.onRefreshComplete();
-			
-			super.onPostExecute(result);
-			
-		}
-	}
-
 }
 

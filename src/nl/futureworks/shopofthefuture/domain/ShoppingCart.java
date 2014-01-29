@@ -3,6 +3,7 @@ package nl.futureworks.shopofthefuture.domain;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
 
 
@@ -52,7 +53,7 @@ public class ShoppingCart extends ShoppingList{
 	 * @throws ShoppingListModificationException 
 	 */
 	public void addItem(ShoppingListItem item, int amount) throws ShoppingListModificationException {
-		if((item != null && amount > 0) && !items.containsKey(item)) {
+		if((item != null && amount > 0) && !contains(item)) {
 			items.put(item, amount);
 		}
 		else {
@@ -67,7 +68,7 @@ public class ShoppingCart extends ShoppingList{
 	 * @throws ShoppingListModificationException 
 	 */
 	public void changeAmount(ShoppingListItem item, int amount) throws ShoppingListModificationException {
-		if((item != null && amount > 0) && items.containsKey(item)) {
+		if((item != null && amount > 0) && contains(item)) {
 			items.put(item, amount);
 		} else {
 			throw new ShoppingListModificationException("Could not change amount");

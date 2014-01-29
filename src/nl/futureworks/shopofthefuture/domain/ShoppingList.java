@@ -1,5 +1,6 @@
 package nl.futureworks.shopofthefuture.domain;
 
+import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.os.Parcel;
@@ -117,5 +118,50 @@ public class ShoppingList implements Parcelable {
 		dest.writeInt(userID);
 		dest.writeString(name);
 		dest.writeMap(items);
+	}
+	
+	public ShoppingListItem getDuplicate(Object o) {
+		Enumeration<ShoppingListItem> en = items.keys();
+		
+		if (o instanceof ShoppingListItem) {
+			ShoppingListItem item = (ShoppingListItem) o;
+	        
+	        while (en.hasMoreElements()) {
+	        	ShoppingListItem foundItem = en.nextElement();
+	        	if (foundItem.equals(item)) {
+	        		return foundItem;
+	        	}
+	        }
+		}
+		
+		return null;
+	}
+	
+	public boolean contains(Object o) {
+		Enumeration<ShoppingListItem> en = items.keys();
+		
+		if (o instanceof ShoppingListItem) {
+			ShoppingListItem item = (ShoppingListItem) o;
+	        boolean exists = false;
+	        
+	        while (en.hasMoreElements()) {
+	        	if (en.nextElement().equals(item)) {
+	        		exists = true;
+	        		break;
+	        	}
+	        }
+	        return exists;
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof ShoppingList){
+		  ShoppingList toCompare = (ShoppingList) o;
+		  return (this.id == toCompare.id && this.userID == toCompare.userID && this.name.equals(toCompare.name));
+		}
+		return false;
 	}
 }
