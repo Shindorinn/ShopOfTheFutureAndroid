@@ -17,8 +17,10 @@ public class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<Shoppi
 	private PullToRefreshListView browserListView;
 	private ArrayList<ShoppingList> shoppingListArray;
 	private DatabaseHandler db;
+	private boolean useApi;
 	
-	public GetShoppingListsTask(Context context, PullToRefreshListView browserListView, ArrayList<ShoppingList> shoppingListArray) {
+	public GetShoppingListsTask(Context context, PullToRefreshListView browserListView, ArrayList<ShoppingList> shoppingListArray, boolean useApi) {
+		this.useApi = useApi;
 		this.shoppingListArray = shoppingListArray;
 		this.browserListView = browserListView;
 		db = DatabaseHandler.getInstance(context);
@@ -26,7 +28,26 @@ public class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<Shoppi
 	
 	@Override
 	protected ArrayList<ShoppingList> doInBackground(Void...params) {
-		//TODO Get new lists from api
+		if (useApi){
+			getFromApi();
+		}
+		
+		//Get latest data from database
+		return getFromDatabase();
+	}
+		
+		
+	@Override
+	protected void onPostExecute(ArrayList<ShoppingList> result) {	
+		browserListView.onRefreshComplete();
+		super.onPostExecute(result);	
+	}
+	
+	private void getFromApi() {
+		//TODO Get new lists from api and insert in database
+	}
+	
+	private ArrayList<ShoppingList> getFromDatabase() {
 		List<HashMap<String, String>> shoppingLists = db.sendQuery("shoppinglist", null, null, null, null, null, null, null);
 		for (int i=0; i<shoppingLists.size(); i++) {
 			HashMap<String, String> listMap = shoppingLists.get(i);
@@ -50,11 +71,4 @@ public class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<Shoppi
 		}
 		return shoppingListArray;
 	}
-		
-		
-		@Override
-		protected void onPostExecute(ArrayList<ShoppingList> result) {	
-			browserListView.onRefreshComplete();
-			super.onPostExecute(result);	
-		}
 }

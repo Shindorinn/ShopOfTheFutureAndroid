@@ -70,7 +70,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		browserListView.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				refreshListView();
+				refreshListView(true);
 			}
 		});
 		
@@ -87,7 +87,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		});
 		
 		//Initialize listViewItems
-		refreshListView();
+		refreshListView(false);
 	}
 	
 	/**
@@ -102,9 +102,9 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 	/** Refreshes the listView
 	 * 
 	 */
-	public void refreshListView() {
+	public void refreshListView(boolean useApi) {
 		try {
-			shoppingListArray = new GetShoppingListsTask(ShoppingListBrowserActivity.this, browserListView, shoppingListArray).execute().get();
+			shoppingListArray = new GetShoppingListsTask(ShoppingListBrowserActivity.this, browserListView, shoppingListArray, useApi).execute().get();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {

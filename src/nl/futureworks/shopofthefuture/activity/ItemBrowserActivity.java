@@ -75,8 +75,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	        
 	    case R.id.clear_cart:
 	    	cart.clearCart();
-	    	title = selectedShoppingList.getName();
-	    	this.recreate();
+	    	this.finish();
 	    	break;
 	    	
 	    case R.id.scan_barcode:
@@ -125,6 +124,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
             List<HashMap<String, String>> result = db.sendQuery("item", null, "barcode = '" + barcode + "'", null, null, null, null, "1");
             
             if (result == null) {
+            	// TODO : Check api if products exists there
             	Toast toast = Toast.makeText(this, R.string.no_product_found, Toast.LENGTH_LONG);
 	            toast.show();
             	return;
@@ -180,7 +180,6 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		
 		//Check if the shopping cart is activated
 		else if (ShoppingCart.shoppingCartExists()) {
-			//TODO setTitle(getString(R.string.title_activity_item_browser));
     		cart = selectedShoppingList.convertToCart();
     		
         	this.shoppingListItemArray = itemsToStringArray(cart.getItems());
@@ -188,7 +187,6 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    }
 		
 		else {
-			//TODO setTitle(selectedShoppingList.getName());
 			this.shoppingListItemArray = itemsToStringArray(items);
         	this.selectedId = -1;
 		}
