@@ -26,6 +26,7 @@ public class GetShoppingListsTask extends AsyncTask<Void, Void, ArrayList<Shoppi
 	
 	@Override
 	protected ArrayList<ShoppingList> doInBackground(Void...params) {
+		//TODO Get new lists from api
 		List<HashMap<String, String>> shoppingLists = db.sendQuery("shoppinglist", null, null, null, null, null, null, null);
 		for (int i=0; i<shoppingLists.size(); i++) {
 			HashMap<String, String> listMap = shoppingLists.get(i);

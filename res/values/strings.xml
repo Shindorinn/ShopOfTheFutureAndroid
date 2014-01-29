@@ -18,7 +18,8 @@
     <string name="title_activity_shopping_list_browser">Saved shopping lists</string>
     
     <!-- ItemBrowserActivity -->
-    <string name="title_activity_item_browser">Items in this shopping list</string>
+    <string name="title_activity_item_browser">Items in shopping list</string>
+    <string name="title_shopping_cart">Shopping Cart</string>
     <string name="item_colomn_name">Product</string>
     <string name="item_colomn_price">Price</string>
     <string name="item_colomn_amount">Amount</string>
@@ -33,6 +34,8 @@
     <string name="error_no_text">Please enter a number</string>
     <string name="error_invalid_int">This is not a valid number</string>
     <string name="error_invalid_amount">This is not a valid amount</string>
+    <string name="no_product_found">No product found with this barcode</string>
+    <string name="item_exists">Already added, make choice</string>
 
     <!-- PullToRefreshListView -->
     <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>

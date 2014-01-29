@@ -7,7 +7,6 @@ import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView;
 import nl.futureworks.shopofthefuture.android.widget.PullToRefreshListView.OnRefreshListener;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.registry.Registry;
-import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 import nl.futureworks.shopofthefuture.task.GetShoppingListsTask;
 import nl.futureworks.shopofthefuture.R;
 
@@ -33,10 +32,6 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shopping_list_browser);
 		
-		//Database Test
-		DatabaseHandler db = DatabaseHandler.getInstance(this);
-		db.sendQuery("user", null, null, null, null, null, null, null);
-		
 		initializeListView(savedInstanceState);
 	}
 
@@ -54,6 +49,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 	@SuppressWarnings("unchecked")
 	private void initializeListView(Bundle savedInstanceState){
 		browserListView = (PullToRefreshListView) findViewById(R.id.shoppinglistbrowser_listview);
+		browserListView.onRefreshComplete();
 		
 		//Check if savedInstanceState is set and restore ListView when possible
 		if (savedInstanceState != null) {
@@ -74,13 +70,7 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 		browserListView.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				try {
-					shoppingListArray = new GetShoppingListsTask(ShoppingListBrowserActivity.this, browserListView, shoppingListArray).execute().get();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				}
+				refreshListView();
 			}
 		});
 		
@@ -95,6 +85,9 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 				startActivity(intent);
 			}	
 		});
+		
+		//Initialize listViewItems
+		refreshListView();
 	}
 	
 	/**
@@ -104,6 +97,19 @@ public class ShoppingListBrowserActivity extends BaseActivity {
 	    super.onSaveInstanceState(savedState);
 	    
 	    savedState.putSerializable("ShoppingLists", shoppingListArray);
+	}
+	
+	/** Refreshes the listView
+	 * 
+	 */
+	public void refreshListView() {
+		try {
+			shoppingListArray = new GetShoppingListsTask(ShoppingListBrowserActivity.this, browserListView, shoppingListArray).execute().get();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

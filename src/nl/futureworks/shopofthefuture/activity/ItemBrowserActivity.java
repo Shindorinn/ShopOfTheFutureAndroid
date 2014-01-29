@@ -2,6 +2,7 @@ package nl.futureworks.shopofthefuture.activity;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,7 +14,6 @@ import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
-import nl.futureworks.shopofthefuture.sqlite.DatabaseHandler;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -38,18 +38,16 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	private ShoppingList selectedShoppingList;
 	private ShoppingCart cart;
 	private int selectedId;
+	private String title;
 	private ConcurrentHashMap<ShoppingListItem, Integer> items;
 	private SparseArray<ShoppingListItem> idToObject;
 	
 	private SimpleAdapter adapter;
 	private LinkedList<HashMap<String, String>> shoppingListItemArray;
-	
-	private DatabaseHandler db;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		db = DatabaseHandler.getInstance(this);
 		initializeLayout(savedInstanceState);
 	}
 
@@ -71,11 +69,13 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    {
 	    case R.id.convert_to_cart:
 	        cart = selectedShoppingList.convertToCart();
+	        title = getString(R.string.title_shopping_cart);
 	        this.recreate();
 	        break;
 	        
 	    case R.id.clear_cart:
 	    	cart.clearCart();
+	    	title = selectedShoppingList.getName();
 	    	this.recreate();
 	    	break;
 	    	
@@ -110,6 +110,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	public void onSaveInstanceState(Bundle savedState) {
 	    super.onSaveInstanceState(savedState);
 	    
+	    savedState.putString("Title", title);
 	    savedState.putSerializable("ItemArray", shoppingListItemArray);
 	    savedState.putSparseParcelableArray("IdToObject", idToObject);
 	    savedState.putParcelable("ShoppingCart", cart);
@@ -121,8 +122,15 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
         if (scanResult != null && scanResult.getContents() != null) {
             
             String barcode = scanResult.getContents();
-            HashMap<String, String> row = db.sendQuery("item", null, "barcode = '" + barcode + "'", null, null, null, null, "1").get(0);
+            List<HashMap<String, String>> result = db.sendQuery("item", null, "barcode = '" + barcode + "'", null, null, null, null, "1");
             
+            if (result == null) {
+            	Toast toast = Toast.makeText(this, R.string.no_product_found, Toast.LENGTH_LONG);
+	            toast.show();
+            	return;
+            }
+            
+            HashMap<String, String> row = result.get(0);
             String name = row.get("name");
             double price = Double.parseDouble(row.get("price"));
             
@@ -142,7 +150,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	        else {
 	        	ShoppingListItem memoryCorrectItem = cart.getDuplicate(item); 
 	        	String[] options = new String[] {getString(R.string.delete_item), getString(R.string.change_amount)};
-	        	createOptionDialog(R.string.amount_title, memoryCorrectItem, options).show();
+	        	createOptionDialog(R.string.amount_title, R.string.item_exists, memoryCorrectItem, options).show();
 	        }
         }
     }
@@ -162,6 +170,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		
 		//Check if savedInstanceState is set and restore ListView when possible
 		if (savedInstanceState != null) {
+			this.title = savedInstanceState.getString("Title");
 			this.cart = (ShoppingCart) savedInstanceState.getParcelable("ShoppingCart");
 			this.shoppingListItemArray = (LinkedList<HashMap<String, String>>) savedInstanceState.getSerializable("ItemArray");
 			this.idToObject = (SparseArray) savedInstanceState.getSparseParcelableArray("IdToObject");
@@ -171,17 +180,21 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		
 		//Check if the shopping cart is activated
 		else if (ShoppingCart.shoppingCartExists()) {
-				setTitle("Shopping Cart");
-        		cart = selectedShoppingList.convertToCart();
-        		
-	        	this.shoppingListItemArray = itemsToStringArray(cart.getItems());
-	        	this.selectedId = -1;
+			//TODO setTitle(getString(R.string.title_activity_item_browser));
+    		cart = selectedShoppingList.convertToCart();
+    		
+        	this.shoppingListItemArray = itemsToStringArray(cart.getItems());
+        	this.selectedId = -1;
 	    }
 		
 		else {
+			//TODO setTitle(selectedShoppingList.getName());
 			this.shoppingListItemArray = itemsToStringArray(items);
         	this.selectedId = -1;
 		}
+		
+		//Set the title
+		setTitle(this.title);
 		
 		//Initialize Adapter
 		adapter = new SimpleAdapter(this, shoppingListItemArray, R.layout.item_browser_row,
@@ -243,11 +256,12 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	 * @param choiceList
 	 * @return
 	 */
-	private Dialog createOptionDialog(int title, ShoppingListItem item, final String[] choiceList) {
+	private Dialog createOptionDialog(int title, int message, ShoppingListItem item, final String[] choiceList) {
 	    final ShoppingListItem cartItem = item;
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	    builder.setTitle(getString(title));
+	    //builder.setMessage(getString(message));
 	    builder.setSingleChoiceItems(choiceList, -1, new DialogInterface.OnClickListener() {
 	        public void onClick(DialogInterface dialog, int whichButton) {   
 
@@ -368,8 +382,9 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		selectedShoppingList = getIntent().getParcelableExtra("SelectedList");
 		idToObject = new SparseArray<ShoppingListItem>();
 		
+		title = selectedShoppingList.getName();
+		
 		items = selectedShoppingList.getItems();
-		setTitle(selectedShoppingList.getName());
 		
 		if (items != null && items.size() > 0) {
 			displayItems(savedInstanceState);

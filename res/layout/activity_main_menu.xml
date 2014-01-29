@@ -8,36 +8,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainMenuActivity" >
 
+    <Button
+        android:id="@+id/button_mainmenu_logout"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/button_mainmenu_browseshoppinglists"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="151dp"
+        android:onClick="logout"
+        android:text="@string/logout" />
 
     <Button
-            style="?android:attr/buttonStyleSmall"
-            android:id="@+id/button_mainmenu_startshopping"
-            android:text="@string/start_shopping"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp"
-            android:onClick="startShopping"/>
-    
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:id="@+id/button_mainmenu_browseshoppinglists"
-            android:text="@string/browse_shopping_lists"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/button_mainmenu_startshopping"
-            android:onClick="browseShoppingLists"/>
-
-    <Button
-            style="?android:attr/buttonStyleSmall"
-            android:id="@+id/button_mainmenu_logout"
-            android:text="@string/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/button_mainmenu_browseshoppinglists"
-            android:onClick="logout"/>
+        android:id="@+id/button_mainmenu_browseshoppinglists"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/button_mainmenu_logout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:onClick="browseShoppingLists"
+        android:text="@string/browse_shopping_lists" />
 
 </RelativeLayout>

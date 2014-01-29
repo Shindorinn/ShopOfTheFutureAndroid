@@ -1,11 +1,7 @@
 package nl.futureworks.shopofthefuture.activity;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -18,26 +14,20 @@ public class LoginActivity extends Activity {
 
     EditText fieldEmail;
     EditText fieldPassword;
-    private SharedPreferences preferences;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         fieldEmail = (EditText) findViewById(R.id.email);
         fieldPassword = (EditText) findViewById(R.id.password);
-        preferences = getSharedPreferences(Registry.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
     }
 
     /**
      * Finish logging in
      */
     private void finishLogin(String loginToken) {
-        Editor editor = preferences.edit();
-        editor.putString(Registry.LOGIN_TOKEN, loginToken);
-        editor.putBoolean(Registry.APP_LOGIN, true);
-        editor.commit();
-        Log.d("DEBUG", preferences.getString(Registry.LOGIN_TOKEN, ""));
-
+        BaseActivity.loginToken=loginToken;
+        BaseActivity.loggedIn=true;
         setResult(Registry.RESULT_OK);
         finish();
     }
