@@ -1,5 +1,8 @@
 package nl.futureworks.shopofthefuture.domain;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -95,4 +98,23 @@ public class ShoppingListItem implements Parcelable{
 		}
 		return false;
 	}
+	
+	/**
+	 * Turn this obj into a JSONObject
+	 * 
+	 * @return JSONObject
+	 */
+	public JSONObject toJSON(){
+		JSONObject toReturn = new JSONObject();
+		try {
+			toReturn.put("barcode", this.barcode);
+			toReturn.put("name", this.name);
+			toReturn.put("price", this.price);
+		} catch (JSONException e) {
+			// nop
+		}
+		
+		return toReturn;
+	}
+	
 }

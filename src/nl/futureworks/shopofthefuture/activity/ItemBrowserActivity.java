@@ -14,6 +14,7 @@ import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.exception.CheckoutException;
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONStringer;
@@ -404,6 +405,7 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 				
 				try {
 					JSONObject jsonObject = createCheckoutJSON(shoppingListItems, amountList, userId);
+					Log.d("JSONCheckout", jsonObject.toString());
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}			
@@ -439,14 +441,26 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	}
 	
 	private JSONObject createCheckoutJSON(ArrayList<ShoppingListItem> items, ArrayList<Integer> amounts, int userid) throws JSONException{
-		JSONStringer builder = new JSONStringer();
-		builder.object()
-		.value(userid)
-		.array().value(items).endArray()
-		.array().value(amounts).endArray()
-		.endObject();
-		Log.d("JSONBUILDER", builder.toString());
-		return new JSONObject(builder.toString());
+//		JSONStringer builder = new JSONStringer();
+//		builder.object()
+//		.value(userid)
+//		.array().value(items).endArray()
+//		.array().value(amounts).endArray()
+//		.endObject();
+//		Log.d("JSONBUILDER", builder.toString());
+//		return new JSONObject(builder.toString());
+		
+		JSONObject toReturn = new JSONObject();
+		toReturn.put("userid", userid);
+		ArrayList<JSONObject> tempList = new ArrayList<JSONObject>();
+		for(int index = 0; index < items.size(); index++){
+			tempList.add(items.get(index).toJSON().put("amount", amounts.get(index)));
+		}
+		JSONArray jsonArray = new JSONArray(tempList);
+		
+		toReturn.put("items", jsonArray);
+		
+		return toReturn;
 	}
 	
 	
