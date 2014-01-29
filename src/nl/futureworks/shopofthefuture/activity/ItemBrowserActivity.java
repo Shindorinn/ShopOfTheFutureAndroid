@@ -1,5 +1,6 @@
 package nl.futureworks.shopofthefuture.activity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +14,7 @@ import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
+import nl.futureworks.shopofthefuture.exception.CheckoutException;
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -80,6 +83,14 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 	    	
 	    case R.id.scan_barcode:
 	    	scanBarcode();
+	    	break;
+	    
+	    case R.id.checkout_cart:
+			try {
+				checkoutCart();
+			} catch (CheckoutException e) {
+				e.printStackTrace();
+			}
 	    	break;
 	    }
 	    	
@@ -368,6 +379,55 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Sends the ShoppingCart to the register 
+	 * @throws CheckoutException 
+	 */
+	@SuppressWarnings("unchecked")
+	private void checkoutCart() throws CheckoutException {
+		ConcurrentHashMap<ShoppingListItem, Integer> cartItems = cart.getItems();
+		
+		if (cartItems != null && !cartItems.isEmpty()) {
+			int userId = cart.getUserID();
+			ArrayList<?>[] convertedCartItems = convertCartItems(cartItems);
+			
+			if (convertedCartItems != null && convertedCartItems.length == 2) {
+				ArrayList<ShoppingListItem> shoppingListItems = (ArrayList<ShoppingListItem>) convertedCartItems[0]; 
+				ArrayList<Integer> amountList = (ArrayList<Integer>) convertedCartItems[1];
+				
+				Log.d("LOL", shoppingListItems.toString() +" "+ amountList.toString());
+				
+			}
+			else {
+				throw new CheckoutException("HashMap converting failed");
+			}
+		}
+		
+		else {
+			Toast toast = Toast.makeText(this, R.string.no_items_found, Toast.LENGTH_LONG);
+            toast.show();
+		}
+		
+	}
+	
+	/**
+	 * Converts Hashmap to dual array 
+	 * @return
+	 */
+	private ArrayList<?>[] convertCartItems(ConcurrentHashMap<ShoppingListItem, Integer> cartItems) {
+		ArrayList<ShoppingListItem> items = new ArrayList<ShoppingListItem>();
+		ArrayList<Integer> amountList = new ArrayList<Integer>();
+		
+		for (Entry<ShoppingListItem, Integer> entry : cartItems.entrySet()) {
+		    ShoppingListItem item = entry.getKey();
+		    items.add(item);
+		    Integer amount = entry.getValue();
+		    amountList.add(amount);
+		}
+		
+		return new ArrayList<?>[] {items, amountList};
 	}
 	
 	/**

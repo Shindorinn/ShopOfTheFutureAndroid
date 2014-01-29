@@ -35,7 +35,9 @@
     <string name="error_invalid_int">This is not a valid number</string>
     <string name="error_invalid_amount">This is not a valid amount</string>
     <string name="no_product_found">No product found with this barcode</string>
+    <string name="no_items_found">No products in shoppinglist</string>
     <string name="item_exists">Already added, make choice</string>
+    <string name="checkout_cart">Checkout</string>
 
     <!-- PullToRefreshListView -->
     <string name="pull_to_refresh_pull_label">Pull to refresh&#8230;</string>
