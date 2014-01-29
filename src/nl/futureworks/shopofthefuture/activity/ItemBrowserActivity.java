@@ -7,15 +7,17 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.domain.ShoppingCart;
 import nl.futureworks.shopofthefuture.domain.ShoppingList;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.exception.CheckoutException;
 import nl.futureworks.shopofthefuture.exception.ShoppingListModificationException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -36,6 +38,9 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMenuItemClickListener {
 	private ShoppingList selectedShoppingList;
@@ -397,8 +402,11 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 				ArrayList<ShoppingListItem> shoppingListItems = (ArrayList<ShoppingListItem>) convertedCartItems[0]; 
 				ArrayList<Integer> amountList = (ArrayList<Integer>) convertedCartItems[1];
 				
-				Log.d("LOL", shoppingListItems.toString() +" "+ amountList.toString());
-				
+				try {
+					JSONObject jsonObject = createCheckoutJSON(shoppingListItems, amountList, userId);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}			
 			}
 			else {
 				throw new CheckoutException("HashMap converting failed");
@@ -429,6 +437,18 @@ public class ItemBrowserActivity extends BaseActivity implements PopupMenu.OnMen
 		
 		return new ArrayList<?>[] {items, amountList};
 	}
+	
+	private JSONObject createCheckoutJSON(ArrayList<ShoppingListItem> items, ArrayList<Integer> amounts, int userid) throws JSONException{
+		JSONStringer builder = new JSONStringer();
+		builder.object()
+		.value(userid)
+		.array().value(items).endArray()
+		.array().value(amounts).endArray()
+		.endObject();
+		Log.d("JSONBUILDER", builder.toString());
+		return new JSONObject(builder.toString());
+	}
+	
 	
 	/**
 	 * Initialize the layout
