@@ -30,4 +30,15 @@
         android:onClick="browseShoppingLists"
         android:text="@string/browse_shopping_lists" />
 
+    <Button
+            android:id="@+id/button_mainmenu_api"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/button_mainmenu_browseshoppinglists"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="48dp"
+            android:onClick="apiMagics"
+            android:text="Api" />
+
 </RelativeLayout>

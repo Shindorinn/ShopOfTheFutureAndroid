@@ -36,6 +36,11 @@ public class MainMenuActivity extends BaseActivity {
 		this.startActivity(shoppingListBrowserIntent);
 	}
 
+    public void apiMagics(View view){
+        Intent apiIntent = new Intent(this, ApiActivity.class);
+        this.startActivity(apiIntent);
+    }
+
     public void logout(View view){
         loggedIn=false;
         loginToken=null;

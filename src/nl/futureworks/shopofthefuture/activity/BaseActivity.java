@@ -12,6 +12,8 @@ public class BaseActivity extends Activity {
 	protected DatabaseHandler db;
 	public static Boolean loggedIn = false;
 	public static String loginToken = null;
+    public static String userName = null;
+    public static String userId = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
