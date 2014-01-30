@@ -3,6 +3,7 @@ package nl.futureworks.shopofthefuture.api;
 import android.util.Log;
 import nl.futureworks.shopofthefuture.activity.BaseActivity;
 import nl.futureworks.shopofthefuture.domain.ApiShoppingList;
+import nl.futureworks.shopofthefuture.domain.ApiShoppingListItem;
 import nl.futureworks.shopofthefuture.domain.ShoppingListItem;
 import nl.futureworks.shopofthefuture.domain.User;
 import retrofit.Callback;
@@ -16,10 +17,12 @@ import java.util.List;
 public class ApiHelper {
     private static ApiHelper instance = null;
     private AhaApiService aas;
+    private List<ApiShoppingList> shoppingListList = null;
+
     private ApiHelper() {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 //TODO: get API URL from config file?
-                .setServer("http://192.168.1.53/phpAPI")
+                .setServer("http://145.37.86.41/phpAPI")
                 .build();
         aas = restAdapter.create(AhaApiService.class);
     }
@@ -31,7 +34,7 @@ public class ApiHelper {
         return instance;
     }
 
-    public void getShoppingLists(String userId) {
+    public List<ApiShoppingList> getShoppingLists(String userId) {
         aas.shoppingCarts(userId, new Callback<HashMap<String, List<ApiShoppingList>>>() {
 
             @Override
@@ -41,18 +44,20 @@ public class ApiHelper {
 
             @Override
             public void success(HashMap<String, List<ApiShoppingList>> shoppingListListMap, Response response) {
-                List<ApiShoppingList> contributorList = shoppingListListMap.get("lists");
-                for (ApiShoppingList contributor : contributorList) {
-                    Log.d("AHAPI", contributor.name + " - " + contributor.id);// + " " + contributor.telnr);
+                shoppingListList = shoppingListListMap.get("lists");
 
-                    for(ShoppingListItem item : contributor.items)
+                for (ApiShoppingList shoppingList : shoppingListList) {
+                    Log.d("AHAPI", shoppingList.name + " - " + shoppingList.id);// + " " + contributor.telnr);
+
+                    for(ApiShoppingListItem item : shoppingList.items)
                     {
-                        Log.d("AHAPI", " : "+item.getBarcode()+" : "+item.getName()+" : "+item.getPrice());
+                        Log.d("AHAPI", " : "+item.barcode+" : "+item.name+" : "+item.price+" : "+item.amount);
                     }
                 }
             }
 
         });
+        return shoppingListList;
     }
 
     public void getUserInfo(String userId) {

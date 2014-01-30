@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import nl.futureworks.shopofthefuture.R;
 import nl.futureworks.shopofthefuture.api.ApiHelper;
+import nl.futureworks.shopofthefuture.domain.ApiShoppingList;
+
+import java.util.List;
 
 public class ApiActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
@@ -15,7 +18,8 @@ public class ApiActivity extends Activity {
 
     public void getShoppingLists(View view)
     {
-        ApiHelper.getInstance().getShoppingLists("37");
+        List<ApiShoppingList> shoppingListList = ApiHelper.getInstance().getShoppingLists("37");
+        //do stuff with list of shopping lists
     }
 
     //TODO: temp, remove when not required anymore

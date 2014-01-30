@@ -6,6 +6,6 @@ public class ApiShoppingList
 {
     public String name;
     public String id;
-    public List<ShoppingListItem> items;
+    public List<ApiShoppingListItem> items;
 }
 
