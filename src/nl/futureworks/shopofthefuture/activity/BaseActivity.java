@@ -67,4 +67,8 @@ public class BaseActivity extends Activity {
 		
 
 	}
+
+    public void onApiResult(Object obj){
+        //implement in subclasses
+    }
 }
